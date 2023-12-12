@@ -1,0 +1,109 @@
+{% extends "accounts/base.html" %}
+
+{% load static %}
+
+{% block css %} 
+<link rel="stylesheet" href="{% static "css/signup.css" %} ">
+{% endblock %}
+
+{% block main %}
+<div class="wrapper">
+    <div class="container main">
+        <div class="row">
+            <div class="col-md-6 side-image"></div>
+            <div class="col-md-6 right">
+                <div class="input-box">
+
+                    <header>Create account</header>
+
+                    <!-- Inside the form element -->
+                    <form method="post" action="{% url 'signup' %}" class="input-box">
+                        {% csrf_token %}
+                        <div class="input-field">
+                            {{ form.name }}
+                            <label for="{{ form.name.id_for_label }}">Name</label>
+                            {% if form.name.errors %}
+                                <div class="error-message">{{ form.name.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="input-field">
+                            {{ form.email }}
+                            <label for="{{ form.email.id_for_label }}">Email</label>
+                            {% if form.email.errors %}
+                                <div class="error-message">{{ form.email.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="input-field">
+                            {{ form.phone_number }}
+                            <label for="{{ form.phone_number.id_for_label }}">Phone Number</label>
+                            {% if form.phone_number.errors %}
+                                <div class="error-message">{{ form.phone_number.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="input-field">
+                            {{ form.password1 }}  <i class="far fa-eye" id="togglePassword" style="position: absolute; top: 30%; right: 10%; cursor: pointer;"></i>
+                            <label for="{{ form.password1.id_for_label }}">Password</label>
+                            {% if form.password1.errors %}
+                                <div class="error-message">{{ form.password1.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="input-field">
+                            {{ form.password2 }}<i class="far fa-eye" id="togglePassword" style="position: absolute; top: 30%; right: 10%; cursor: pointer;"></i>
+                            <label for="{{ form.password2.id_for_label }}">Confirm Password</label>
+                            {% if form.password2.errors %}
+                                <div class="error-message">{{ form.password2.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="input-field">
+                            <input type="submit" class="submit" value="Sign Up">
+                        </div>
+                        
+                        <div class="signin">
+                            <span>Already have an account? <a href="{% url 'login' %}">Log in here</a></span>
+                           </div>
+
+                        <!-- Display form errors -->
+                        {% if form.errors %}
+                        <div class="error-box">
+                            <div class="alert alert-danger" role="alert">
+                                <strong>Error:</strong>
+                                <ul>
+                                    {% for error in form.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                    </form>
+                    
+                </div>  
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock  %}
+
+{% block script %}
+<script>
+    const togglePassword = document.querySelector('#togglePassword');
+    const password = document.querySelector('#id_password');
+  
+    togglePassword.addEventListener('click', function (e) {
+      // toggle the type attribute
+      const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+      password.setAttribute('type', type);
+      // toggle the eye slash icon
+      this.classList.toggle('fa-eye-slash');
+  });
+   </script>
+   {% endblock %}
+   
+       
+

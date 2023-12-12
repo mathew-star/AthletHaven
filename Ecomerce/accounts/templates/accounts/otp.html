@@ -1,0 +1,148 @@
+{% extends 'accounts/base.html' %}
+
+
+
+{% load static %}
+
+{% block css %} 
+
+
+<style>
+  .otp-input {
+     display: flex;
+     justify-content: center;
+     margin-bottom: 20px;
+  }
+
+  .otp-box {
+     width: 40px;
+     height: 40px;
+     text-align: center;
+     border-bottom: 2px solid #000000;
+     margin-right: 10px;
+  }
+  .card{
+    box-shadow: 8px 8px 5px dimgrey;
+    background-color: #D2D5DD;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 40%;
+
+  }
+  .btn{
+    background-color: #D2D5DD;
+    border:1px solid black;
+  }
+  .btn:hover {
+    color:white;
+  }
+  #resendBtn:hover {
+      border: 1px solid #000; /* Change this to the color you want */
+    }
+
+
+</style>
+
+{% endblock %}
+
+
+{% block main %}
+<div class="container">
+  {% for message in messages %}
+  <div class="alert alert-info alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+ {% endfor %}
+ 
+  <div class="card mx-auto " style="width: 400px;">
+      <div class="card-body">
+     
+          <h2 class="text-center mt-2">Enter OTP</h2>
+        <p class=" ms-4">OTP has been sent to your emial address</p>
+
+        
+
+        <form method="post" action="{% url 'verify_otp' user_id=user.id %}" >
+          {% csrf_token %}
+          <div class="otp-input">
+              <input type="text" name="otp" class="otp-box" maxlength="1">
+              <input type="text" name="otp"  class="otp-box" maxlength="1">
+              <input type="text" name="otp"  class="otp-box" maxlength="1">
+              <input type="text" name="otp"  class="otp-box" maxlength="1">
+              <input type="text" name="otp"  class="otp-box" maxlength="1">
+              <input type="text" name="otp"  class="otp-box" maxlength="1">
+          </div>
+
+          <div class="countdown">
+              <span id="timer">60</span> seconds remaining
+          </div>
+          <button type="submit" class="btn submit btn-block mt-3 text-black" style="display: none;" id="submitBtn">Submit</button>
+      </form>
+      <div class="resend">
+          <a class="border-0 p-3 " style="display: none;" id="resendBtn" href=" {% url 'resend_otp' user_id=user.id %}">Resend</a>
+      </div>
+      </div>
+      
+  </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+
+<!-- loader  -->
+
+<script> 
+let otpBoxes = document.querySelectorAll('.otp-box');
+let timer = document.getElementById('timer');
+let submitBtn = document.getElementById('submitBtn');
+let resendBtn = document.getElementById('resendBtn');
+let countdown = 60;
+
+
+otpBoxes[0].focus();
+otpBoxes[0].addEventListener('paste', (e) => {
+  let paste = (e.clipboardData || window.clipboardData).getData("text");
+  if (paste.length === 6 && !isNaN(paste)) {
+    for (let i = 0; i < 6; i++) {
+      otpBoxes[i].value = paste[i];
+      otpBoxes[i].focus();
+    }
+    
+    submitBtn.style.display = 'block';
+  }
+})
+
+// Handle OTP input
+otpBoxes.forEach((box, index) => {
+  box.addEventListener('keyup', (event) => {
+      if (event.keyCode >= 48 && event.keyCode <= 57) {
+          // Move to the next input field if it exists
+          if (otpBoxes[index + 1]) {
+              otpBoxes[index + 1].focus();
+          } else {
+              // Show the submit button when the last digit is entered
+              submitBtn.style.display = 'block';
+          }
+      }
+  });
+});
+
+// Start the countdown timer
+let countdownInterval = setInterval(() => {
+  countdown--;
+  timer.textContent = countdown;
+
+  if (countdown === 0) {
+      clearInterval(countdownInterval);
+      timer.textContent = 'Time is up';
+      // Show the resend button when the countdown completes
+      resendBtn.style.display = 'block';
+  }
+}, 1000);
+
+</script>
+{% endblock %}

@@ -1,0 +1,420 @@
+html {
+    height: 100%;
+    width: 100%;
+  
+  }
+  *{
+    font-family: 'Poppins', sans-serif;
+  }
+
+
+  
+  .navbar-custom {
+    background-color: #A7A9BA;
+  }
+  
+  .navbar-custom .nav-link {
+    color: black;
+    font-size: 20px; /* Increased font size for the links */
+  }
+  .navbar-custom .nav-link:hover {
+    color: #007BFF;
+  }
+  
+  /* Adjust dropdown styles */
+  .navbar-custom .dropdown-menu {
+    background-color: #A7A9BA;
+  }
+  
+  .navbar-custom .dropdown-menu a {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    color: black;
+    font-size: 18px;
+  }
+  
+  .navbar-custom .dropdown-menu i {
+    margin-right: 10px;
+  }
+  
+  /* Additional styles for the search form */
+  .navbar-custom .search-form {
+    padding-right: 10px;
+    /* Adjust the padding as needed */
+  }
+  
+  .navbar-custom .search-btn {
+    color: black; /* Set the initial button text color */
+    background-color: #D2D5DD; /* Set the initial button background color */
+    border: 1px solid black; /* Set the initial button border color */
+  }
+  
+  .navbar-custom .search-btn:hover {
+    color: white; /* Change text color on hover */
+    background-color: black; /* Change background color on hover */
+  }
+  
+  .navbar-brand{
+    font-weight: bold;
+    font-size: 1.5rem;
+    color:#000000;
+  }
+  
+  /* Styles for the carousel section */
+  
+  .carousel-text {
+      position: absolute;
+      top: 50%;
+      left: 23%;
+      transform: translate(-50%, -50%);
+      text-align: left;
+      width: 80%; /* Adjust the width as needed */
+      max-width: 400px; /* Set a maximum width if necessary */
+  }
+  
+  .carousel-text h2 {
+    color: black;
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+  }
+  
+  .carousel-text p {
+    color: black;
+      font-size: 1.25rem;
+      margin-bottom: 1.5rem;
+  }
+  
+  .carousel-text a.btn {
+      display: inline-block;
+      font-size: 1.25rem;
+      font-weight: bold;
+      text-decoration: none;
+      color: white;
+      background-color: black;
+      padding: 0.75rem 1.5rem;
+      border: 2px solid black;
+      transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .carousel-text a.btn:hover {
+      color: white;
+      background-color: black;
+  }
+  
+  @media (max-width: 768px) {
+      .carousel-text {
+          position: absolute;
+          top:40%;
+          left: 40%;
+          text-align: left;
+      }
+  
+      .carousel-text h2 {
+          font-size: 28px;
+      }
+  
+      .carousel-text p {
+          font-size: 16px;
+      }
+  
+      .carousel-text a.btn {
+          font-size: 12px;
+          padding: 8px 16px;
+      }
+  }
+  
+  
+  .carousel-text{
+      border: 1px solid #b1aaaa; 
+      background-color: rgba(255, 255, 255, 0.3); 
+      padding: 2%; /* Use percentage for padding */
+    border-radius:  0px 15px 1px 15px;
+      width: 100%;
+  }
+  
+  .carousel-text h2,
+  .carousel-text p,
+  .carousel-text .btn {
+      margin: 0; /* Remove default margins */
+      padding: 0.5em; /* Adjust padding as needed */
+      width: 100%; /* Make text width 100% of the container */
+      box-sizing: border-box; /* Include padding and border in the element's total width and height */
+  }
+  
+  
+  .navbar-custom .nav-item:nth-child(1) .nav-link {
+    font-weight: 200; /* Medium */
+  }
+  .navbar-custom .nav-item:nth-child(2) .nav-link {
+    font-weight: 400; /* Slightly bolder */
+  }
+  .navbar-custom .nav-item:nth-child(3) .nav-link {
+    font-weight: 700; /* Bolder */
+  }
+  .navbar-custom .nav-item:nth-child(4) .nav-link {
+    font-weight: 800; /* Boldest */
+  }
+  /* Additional styles for the search form */
+  .navbar-custom .search-form {
+    padding-right: 10px;
+  /* Adjust the padding as needed */
+  }
+  
+  .navbar-custom .search-btn {
+    color: black; /* Change the color of the search button to black */
+  }
+  
+  .card {
+      border-radius: 15%;
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+  
+  
+  }
+  
+  .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+      border:1px solid #8d8686
+  }
+  
+  .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.3); /* Adjust the transparency as needed */
+  }
+  
+  .card-title {
+      position: absolute;
+      bottom: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Russo One', sans-serif;
+      font-size: 2rem;
+      color: black;
+  }
+  /* Add this CSS code to your existing styles */
+  /* Add this CSS code to your existing styles */
+  
+  .product-card {
+      position: relative;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+  }
+  
+  .product-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  }
+  
+  .product-img {
+      width: 100%;
+      height: auto;
+      border-bottom: 1px solid #ddd;
+  }
+  
+  .product-info {
+      padding: 15px;
+  }
+  
+  .product-name {
+      font-size: 1.1rem;
+      font-weight: bold;
+  }
+  
+  .rating-box {
+      background-color: #176412;
+      color: white;
+      padding: 5px;
+      display: inline-block;
+      border-radius:  0px 10px 1px 10px;
+      margin-bottom: 10px;
+  }
+  
+  .product-price {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #000000;
+  }
+  
+  .add-to-cart-btn {
+      display: none;
+      position: absolute;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #a0a2a6;
+      color: black;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+  }
+  
+  .product-card:hover .add-to-cart-btn {
+      display: block;
+  }
+  
+  @media (max-width: 990px) {
+    .product-card:hover .add-to-cart-btn{
+        display: block;
+  
+        width: 74%;
+        height:auto;
+        text-align: center;
+      }
+  }
+  
+  /* Add this CSS code to your existing styles */
+  
+  
+  
+  .wishlist-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 24px;
+      color: #888; /* Initial color */
+      transition: color 0.3s;
+  }
+  
+  .wishlist-btn.wishlist-selected {
+      color: red; /* Color when selected */
+  }
+  
+  
+  
+  /* Testimonial Styles */
+  #testimonialCarousel {
+      margin-top: 50px;
+  }
+  
+  #testimonialCarousel .carousel-inner {
+      text-align: center;
+  }
+  
+  #testimonialCarousel .carousel-item img {
+      width: 150px; /* Adjust the width of the user image */
+      height: 150px; /* Set the height to the same value as width */
+      object-fit: cover; /* Ensure the image covers the entire container */
+      border-radius: 50%; /* Make the image round */
+  }
+  
+  #testimonialCarousel .testimonial-text {
+      padding: 20px;
+  }
+  
+  #testimonialCarousel .testimonial-text p {
+      font-size: 18px;
+      font-style: italic;
+      margin-bottom: 20px;
+  }
+  
+  #testimonialCarousel .testimonial-text h4 {
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 0;
+  }
+  
+  
+  /* Footer Styles */
+  footer {
+      background-color: #1B1C25;
+      color: white;
+      padding: 30px 0;
+      margin-top: 50px;
+  
+  
+  
+  }
+  
+  .footer-columns {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+  }
+  
+  .footer-column {
+      width: 25%;
+      padding: 0 15px;
+      box-sizing: border-box;
+  }
+  
+  .footer-column h3 {
+      margin-bottom: 20px;
+  }
+  
+  .footer-column ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+  }
+  
+  .footer-column a {
+      text-decoration: none;
+      color: white;
+      display: block;
+  
+  }
+  .footer-column ul li{
+    margin-bottom: 2rem;
+  
+  }
+  
+  
+  
+  /* Newsletter Section Styles */
+  .footer-column form {
+      display: flex;
+      flex-direction: column;
+  }
+  
+  .footer-column input[type="email"] {
+      border: none;
+      border-bottom: 1px solid white;
+      background: transparent;
+      color: white;
+      padding: 5px;
+      margin-bottom: 10px;
+      width: 100%;
+      box-sizing: border-box;
+      transition: border-bottom-color 0.3s;
+  }
+  
+  .footer-column input[type="email"]:focus {
+      border-bottom-color: #f00; /* Change the color on focus */
+  }
+  
+  .footer-column button {
+      border: 1px solid white;
+      background-color: transparent;
+      color: white;
+      padding: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .footer-column button:hover {
+      background-color: #1B1C25;
+      color: #fff;
+  }
+  
+  
+  
+  /* Responsive Styling */
+  @media (max-width: 768px) {
+      .footer-column {
+          width: 50%;
+      }
+  }
+  
