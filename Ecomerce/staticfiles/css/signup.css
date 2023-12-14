@@ -18,7 +18,7 @@
 }
 
 .side-image {
-  background-image: url("/Ecomerce/media/images/Newopen.jpg");
+  background-image: url("/media/images/Newopen.jpg");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -27,8 +27,8 @@
 }
 
 .row {
-  width: 900px;
-  height: 550px;
+  width: 80vw;
+  height: 70vh;
   border-radius: 10px;
   background: #b8b9bc;
   padding: 0px;
@@ -60,7 +60,7 @@ i {
 }
 
 .input-box {
-  width: 330px;
+  width: 90%;
   box-sizing: border-box;
 }
 
@@ -181,4 +181,16 @@ span a:hover {
     max-width: 420px;
     width: 100%;
   }
+}
+
+.error-box {
+  margin-top: 20px;
+  max-height: 200px; /* Set a maximum height to prevent the box from becoming too large */
+  overflow-y: auto; /* Add vertical scrollbar if needed */
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
 }

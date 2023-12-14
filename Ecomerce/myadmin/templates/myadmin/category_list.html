@@ -1,0 +1,38 @@
+
+{% extends 'myadmin/adminbase.html' %}
+
+
+{% block main %}
+  <div class="container mt-5">
+    <h1>Category List</h1>
+
+    <table class="table table-bordered table-striped">
+      <thead class="thead-dark">
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Image</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for category in categories %}
+          <tr>
+            <td>{{ category.name }}</td>
+            <td>{{ category.description }}</td>
+            <td><img src="{{ category.image.url }}" alt="{{ category.name }}" height="50"></td>
+            <td>
+              {% if category.is_listed %}
+                <a href="{% url 'toggle_category_listing' category.id %}" class="btn btn-warning">Unlist</a>
+              {% else %}
+                <a href="{% url 'toggle_category_listing' category.id %}" class="btn btn-success">List</a>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <a href="{% url 'add_category' %}" class="btn btn-primary">Add Category</a>
+  </div>
+{% endblock %}

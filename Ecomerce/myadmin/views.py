@@ -6,6 +6,9 @@ from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from accounts.models import CustomUser
 from myadmin.models import BlockedUser
+from .models import Category
+from .forms import CategoryForm
+
 # Create your views here.
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=False)
@@ -76,10 +79,6 @@ def user_management_view(request):
                 blocked_user.delete()
                 user.is_active = True  # Set is_active to True when unblocked
 
-        elif action == 'Delete':
-            user.delete()
-            return redirect('user_management_view')  # Redirect after deletion
-
         elif action == 'Edit':
             # Redirect to the edit user page
             return redirect('edit_user', user_id=user_id)
@@ -100,3 +99,24 @@ def edit_user_view(request, user_id):
      user.save()
      return redirect('user_management_view')
  return render(request, 'myadmin/edituser.html', {'user': user})
+
+
+def category_list(request):
+    categories = Category.objects.all()
+    return render(request, 'myadmin/category_list.html', {'categories': categories})
+
+def add_category(request):
+    if request.method == 'POST':
+        form = CategoryForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('category_list')
+    else:
+        form = CategoryForm()
+    return render(request, 'myadmin/add_category.html', {'form': form})
+
+def toggle_category_listing(request, category_id):
+    category = Category.objects.get(id=category_id)
+    category.is_listed = not category.is_listed
+    category.save()
+    return redirect('category_list')
