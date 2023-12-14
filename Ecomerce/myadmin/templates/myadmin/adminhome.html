@@ -1,0 +1,166 @@
+
+{% extends "myadmin/adminbase.html" %}
+
+{% block css %} 
+<style>
+
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      
+      }
+      
+      #navbar {
+        background-color: #949494;
+        padding: 15px;
+        color: white;
+        text-align: center;
+      }
+      
+      /* Adjust dropdown styles */
+      .navbar-custom .dropdown-menu {
+        background-color: #A7A9BA;
+      }
+      
+      .navbar-custom .dropdown-menu a {
+        display: flex;
+        align-items: center;
+        padding: 8px 16px;
+        color: black;
+        font-size: 18px;
+      }
+      
+      .navbar-custom .dropdown-menu i {
+        margin-right: 10px;
+      }
+      
+      #sidebar {
+        height: 100%;
+        width: 250px;
+        position: fixed;
+        top: 0;
+        left: -250px;
+        background-color: #111;
+        padding-top: 60px;
+        transition: 0.5s;
+      }
+      
+      #sidebar a {
+        padding: 15px;
+        text-decoration: none;
+        font-size: 18px;
+        color: black;
+        display: block;
+        transition: 0.3s;
+      }
+      
+      #sidebar a:hover {
+        background-color: #e3e3e3;
+      
+      }
+      
+      #toggle-btn {
+        position: relative;
+        left: 10px;
+        top: 10px;
+        cursor: pointer;
+        font-size: 40px;
+        color: white;
+        z-index: 1;
+      }
+</style>
+
+
+{% endblock %}
+
+
+{% block main %}
+<nav class="navbar navbar-expand-lg navbar-custom">
+
+
+
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        <span class=" mr-3 navbar-toggler-icon d-inline-block" id="toggle-btn"
+          style="z-index:21; color:black;">&#9776;</span>
+        <img th:src="@{/images/logo.png}" src="../static/images/logo.png" width="auto" height="80"
+          class="d-inline-block align-top" alt="" />
+      </a>
+      <h1 class="float-start" style="font-size: 2rem;"> <strong> AthleteHaven</strong> </h1>
+
+      <div class="nav-item dropleft me-5">
+
+        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          <i class="fa-solid fa-user" style="color: #000000;"></i>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="userDropdown">
+          <a class="dropdown-item" href="#"><i class="fas fa-user"></i> Admin-home </a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="{% url "adminlogout" %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Sidebar -->
+  <div id="sidebar" style="background:#aeacb9; color:black; z-index:20;">
+    <div class="mt-4 ml-3">
+      <a href="#">Categories</a>
+      <a href="#">Products</a>
+      <a href="#">Users</a>
+      <a href="#">Variants</a>
+      <a href="#">Orders</a>
+      <a href="#">Coupons</a>
+      <a href="#"> Offers</a>
+        <a href="#">Referral Code</a>
+        <a href="#">User Reviews</a>
+        <a href="#">Sales Report</a>
+
+    </div>
+  </div>
+
+  <div class="container-fluid">
+
+
+    <div class="row justify-content-center">
+
+      <!-- Content area -->
+      <div class="col-sm-9 col-md-10 pt-3">
+        <div class="jumbotron text-center admin-box" style="background-color: #aeacb9;">
+          <h1 class="display-4 admin-card">Welcome <span th:text="${username}"
+              style="font-weight: bold; color: white;"></span></h1>
+
+          <p class="admin-card">Easily manage your profile </p>
+        </div>
+        <label for="chartType"></label><select id="chartType">
+          <option value="daily">Daily Chart</option>
+          <option value="monthly">Monthly Chart</option>
+          <option value="yearly">Yearly Chart</option>
+        </select>
+
+        <div class="center-container">
+          <canvas id="myChart" style="display: flex;
+                 justify-content: center ; align-items: center; "> </canvas>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  {% endblock %}
+
+
+  {% block script %}
+  <script>
+    document.getElementById('toggle-btn').addEventListener('click', function () {
+      var sidebar = document.getElementById('sidebar');
+      if (sidebar.style.left === '-250px') {
+        sidebar.style.left = '0';
+      } else {
+        sidebar.style.left = '-250px';
+      }
+    });
+  </script>
+  {% endblock %}
