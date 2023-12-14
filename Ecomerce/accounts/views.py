@@ -4,6 +4,7 @@ from django.urls import reverse ,reverse_lazy
 from django.contrib.auth import login as auth_login,authenticate,logout as auth_logout
 from accounts.form import CustomUserCreationForm
 from accounts.models import CustomUser
+from myadmin.models import BlockedUser 
 from django.core import signing 
 from django.views.decorators.cache import cache_control
 from django.contrib.auth.decorators import login_required
@@ -69,17 +70,23 @@ def login(request):
 
         try:
             user = CustomUser.objects.get(email=email)
-        except :
+        except CustomUser.DoesNotExist:
             messages.warning(request, f"User with {email} does not exist")
 
         if user is not None:
-            authenticated_user = authenticate(request, email=email, password=password)
+            # Check if the user is blocked
+            blocked_user = BlockedUser.objects.filter(user=user).first()
             
-            if authenticated_user is not None:
-                auth_login(request, authenticated_user)
-                return redirect("home")
+            if blocked_user:
+                messages.warning(request, "User is blocked by admin.")
             else:
-                messages.warning(request, "Invalid password")
+                authenticated_user = authenticate(request, email=email, password=password)
+                
+                if authenticated_user is not None:
+                    auth_login(request, authenticated_user)
+                    return redirect("home")
+                else:
+                    messages.warning(request, "Invalid password")
         else:
             messages.warning(request, "User doesn't exist, Create an account")
 

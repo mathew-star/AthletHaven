@@ -123,17 +123,18 @@
   {% endblock %}
 
   {% block main %}
+  
+  {% for message in messages %}
+          <div class="alert alert-info alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+         {% endfor %}
     <div class="wrapper">
         <div class="container main">
-
-  
+          
           <div class="row">
-              {% for message in messages %}
-            <div class="alert alert-info alert-dismissible fade show" role="alert">
-              {{ message }}
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-           {% endfor %}
+             
             <div class="input-box">
               <form method="post" action="{% url 'login' %}">
                 {% csrf_token %}

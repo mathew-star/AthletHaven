@@ -84,8 +84,8 @@
       <a class="navbar-brand" href="#">
         <span class=" mr-3 navbar-toggler-icon d-inline-block" id="toggle-btn"
           style="z-index:21; color:black;">&#9776;</span>
-        <img th:src="@{/images/logo.png}" src="../static/images/logo.png" width="auto" height="80"
-          class="d-inline-block align-top" alt="" />
+        <!--<img th:src="" src="../static/images/logo.png" width="auto" height="80"
+          class="d-inline-block align-top" alt="" />-->
       </a>
       <h1 class="float-start" style="font-size: 2rem;"> <strong> AthleteHaven</strong> </h1>
 
@@ -109,7 +109,7 @@
     <div class="mt-4 ml-3">
       <a href="#">Categories</a>
       <a href="#">Products</a>
-      <a href="#">Users</a>
+      <a href="{% url "user_management_view" %}">Users</a>
       <a href="#">Variants</a>
       <a href="#">Orders</a>
       <a href="#">Coupons</a>

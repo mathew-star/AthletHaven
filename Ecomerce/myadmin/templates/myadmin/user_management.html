@@ -1,0 +1,116 @@
+{% extends "myadmin/adminbase.html" %}
+
+
+{% block css %} 
+<style>
+   /* Add your base template CSS here */
+
+   /* Table CSS */
+   .table {
+       width: 100%;
+       margin-bottom: 1rem;
+       color: #212529;
+       background-color: transparent;
+   }
+
+   .table th,
+   .table td {
+       padding: 0.75rem;
+       vertical-align: top;
+       border-top: 1px solid #dee2e6;
+   }
+
+   .table thead th {
+       vertical-align: bottom;
+       border-bottom: 2px solid black;
+   }
+
+   .table tbody + tbody {
+       border-top: 2px solid black;
+   }
+
+   .table-sm th,
+   .table-sm td {
+       padding: 0.3rem;
+   }
+
+   .table-bordered {
+       border: 1px solid black;
+   }
+
+   .table-bordered th,
+   .table-bordered td {
+       border: 1px solid black;
+   }
+
+   .table-bordered thead th,
+   .table-bordered thead td {
+       border-bottom-width: 2px;
+   }
+
+   .table-borderless th,
+   .table-borderless td,
+   .table-borderless thead th,
+   .table-borderless tbody + tbody {
+       border: 0;
+   }
+
+   .table-striped tbody tr:nth-of-type(odd) {
+       background-color: rgba(0, 0, 0, 0.05);
+   }
+
+   .table-hover .table-striped:hover tbody tr:hover {
+       background-color: rgba(0, 0, 0, 0.075);
+   }
+
+   .table-head{
+    background-color: #aeacb9;
+    border: 1px solid black;
+   }
+
+   /* Add more CSS here */
+</style>
+{% endblock %}
+
+{% block main %}
+<div class="container-fluid">
+ <div class="row justify-content-center">
+   <div class="col-sm-9 col-md-10 pt-3">
+     <div class="jumbotron text-center admin-box" style="background-color: #aeacb9;">
+       <h1 class="display-4 admin-card">User List</h1>
+     </div>
+     <table class="table">
+       <thead class="table-head">
+         <tr>
+           <th>Username</th>
+           <th>Email</th>
+           <th>Actions</th>
+         </tr>
+       </thead>
+       <tbody>
+         {% for user in users %}
+           <tr>
+             <td>{{ user.name }}</td>
+             <td>{{ user.email }}</td>
+             <td>
+               <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="user_id" value="{{ user.id }}">
+                {% if user.is_active %}
+                <input type="submit" name="action" value="Block" class="btn btn-danger">
+                {% else %}
+                <input type="submit" name="action" value="Unblock" class="btn btn-success">
+                {% endif %}
+                <input type="submit" name="action" value="Delete" class="btn btn-danger">
+                <input type="submit" name="action" value="Edit" class="btn btn-primary">
+               </form>
+             </td>
+           </tr>
+         {% endfor %}
+       </tbody>
+     </table>
+   </div>
+ </div>
+</div>
+{% endblock %}
+

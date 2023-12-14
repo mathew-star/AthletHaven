@@ -1,11 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth import login, authenticate,logout
 from django.views.decorators.cache import cache_control
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from accounts.models import CustomUser
-
+from myadmin.models import BlockedUser
 # Create your views here.
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=False)
@@ -56,3 +56,47 @@ def adminhome(request):
         return render(request, 'myadmin/adminhome.html')
     return redirect('adminlogin')
     
+
+def user_management_view(request):
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        user_id = request.POST.get('user_id')
+        user = CustomUser.objects.get(id=user_id)  # Use your custom user model
+
+        if action == 'Block':
+            # Check if the user is not already blocked
+            if not BlockedUser.objects.filter(user=user).exists():
+                BlockedUser.objects.create(user=user)
+                user.is_active = False  # Set is_active to False when blocked
+
+        elif action == 'Unblock':
+            # Check if the user is blocked
+            blocked_user = BlockedUser.objects.filter(user=user).first()
+            if blocked_user:
+                blocked_user.delete()
+                user.is_active = True  # Set is_active to True when unblocked
+
+        elif action == 'Delete':
+            user.delete()
+            return redirect('user_management_view')  # Redirect after deletion
+
+        elif action == 'Edit':
+            # Redirect to the edit user page
+            return redirect('edit_user', user_id=user_id)
+
+        user.save()  # Save only if necessary
+        return redirect('user_management_view')  # Redirect after other actions
+
+    users = CustomUser.objects.all()  # Use your custom user model
+    return render(request, 'myadmin/user_management.html', {'users': users})
+
+
+def edit_user_view(request, user_id):
+ user = CustomUser.objects.get(id=user_id)
+ if request.method == 'POST':
+     user.name = request.POST.get('name')
+     user.email = request.POST.get('email')
+     user.phone_number = request.POST.get('phone_number')
+     user.save()
+     return redirect('user_management_view')
+ return render(request, 'myadmin/edituser.html', {'user': user})
