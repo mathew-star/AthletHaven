@@ -147,6 +147,6 @@ def home(request):
     images= ProductImages.objects.all()
     for i in products:
         print(i.rating)
-    return render(request,'accounts/ushome.html',{'categories': categories,'products':products,'images':images})
+    return render(request,'users/userhome.html',{'categories': categories,'products':products,'images':images})
 
     

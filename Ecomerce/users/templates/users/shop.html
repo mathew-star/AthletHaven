@@ -1,0 +1,40 @@
+
+{% extends "users/ubase.html" %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static "css/hstyle.css" %} ">
+{% endblock %}
+
+{% block main %}
+<div class="container mt-5">
+    <h2 class="text-center m-3">Our Products</h2>
+    <div class="row mt-4">
+        <!-- Product 1 -->
+        {% for product in products %}
+        <div class="col-md-4 mb-4">
+         
+            <div class="product-card">
+
+             <button class="wishlist-btn" onclick="toggleWishlist(this)"><i class="far fa-heart"></i></button>
+               <a href="product-detail.html" class="prod-det">
+                  {% for img in product.image.all %}
+              {% if forloop.first %}
+                <!-- Display only the first image with a responsive class -->
+                <img src="{{ img.image.url }}" alt="{{ product.name }}" class="product-img img-fluid">
+              {% endif %}
+            {% endfor %}</a>
+                
+                <div class="product-info">
+                    <div class="rating-box">4.1<i class="fas fa-star"></i></div>
+                    <h5 class="product-name"> {{product.name}} </h5>
+                    <p class="product-price"> {{product.price}}Rs</p>
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+              
+            </div>
+        </div>
+        {% endfor %}
+
+   </div>
+</div>
+{% endblock main %}

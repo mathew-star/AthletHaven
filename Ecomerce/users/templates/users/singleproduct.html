@@ -1,0 +1,57 @@
+{% extends "users/ubase.html" %}
+
+{% load static %}
+
+
+
+
+{% block main %}
+
+
+<div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <!-- Carousel for product images -->
+        <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner">
+                {% for img in product.image.all %}
+            
+              <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                  <img src="{{ img.image.url }}" alt="{{ product.name }}" class="product-img img-fluid">
+              </div>
+              {% endfor %}
+
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <!-- Product details -->
+        <h1>{{ product.name }}</h1>
+        <p>{{ product.description }}</p>
+        <p>Price: ${{ product.price }}</p>
+        <p>Rating: {{ product.get_rating_display }}</p>
+        <p>Star: {{ product.get_star_display }}</p>
+        <!-- Buttons -->
+        <button class="btn btn-primary">Add to Cart</button>
+        <button class="btn btn-secondary">Buy Now</button>
+      </div>
+    </div>
+   </div>
+
+{% endblock %}
+
+
+
+
+{% block script %}
+
+
+{% endblock %}
