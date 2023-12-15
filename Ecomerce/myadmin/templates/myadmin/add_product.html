@@ -1,0 +1,97 @@
+
+{% extends 'myadmin/adminbase.html' %}
+
+{% block main %}
+  <div class="container mt-5">
+    <h1 class="mb-4">Add Product</h1>
+
+    <form method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="name" class="form-label">Name:</label>
+        <input type="text" class="form-control" id="name" name="name" required>
+      </div>
+      <div class="mb-3">
+        <label for="description" class="form-label">Description:</label>
+        <textarea class="form-control" id="description" name="description" required></textarea>
+      </div>
+      <div class="mb-3">
+        <label for="category" class="form-label">Category:</label>
+        <select class="form-select" id="category" name="category" required>
+          {% for category in categories %}
+            <option value="{{ category.id }}">{{ category.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="price" class="form-label">Price:</label>
+        <input type="text" class="form-control" id="price" name="price" pattern="[0-9]+" title="Please enter a valid number" required>
+        <div id="price-error" class="text-danger"></div>
+      </div>
+      <div class="mb-3">
+        <label for="rating" class="form-label">Rating:</label>
+        <select class="form-select" id="rating" name="rating" required>
+          <option value="1">4.1</option>
+          <option value="2">4.2</option>
+          <option value="3">4.3</option>
+          <option value="4">4.4</option>
+          <option value="5">5</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="star" class="form-label">Star:</label>
+        <select class="form-select" id="star" name="star" required>
+          <option value="1">1 star</option>
+          <option value="2">2 stars</option>
+          <option value="3">3 stars</option>
+          <option value="4">4 stars</option>
+          <option value="5">5 stars</option>
+        </select>
+      </div>
+
+      <div id="image-inputs">
+        <!-- Initial image input -->
+        <div class="mb-3">
+          <label for="image1" class="form-label">Image 1:</label>
+          <input type="file" class="form-control" id="image1" name="image1" accept="image/*" required>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-success" id="add-image">Add Image</button>
+      <button type="submit" class="btn btn-primary">Add Product</button>
+    </form>
+
+    <a href="{% url 'product_list' %}" class="btn btn-secondary mt-3">Back to Product List</a>
+  </div>
+
+  <script>
+    function validateForm() {
+      // Validate price as a number
+      var price = document.getElementById('price').value;
+      if (isNaN(price)) {
+        document.getElementById('price-error').innerText = 'Please enter a valid number for price.';
+        return false;
+      } else {
+        document.getElementById('price-error').innerText = '';
+      }
+
+      // Add additional validation if needed
+
+      return true;  // Form is valid
+    }
+
+    $(document).ready(function() {
+      $("#add-image").click(function() {
+        var formCount = $("#image-inputs input[type='file']").length + 1;
+        var newInput = $(
+          '<div class="mb-3">' +
+          '<label for="image' + formCount + '" class="form-label">Image ' + formCount + ':</label>' +
+          '<input type="file" class="form-control" id="image' + formCount + '" name="image' + formCount + '" required>' +
+          '</div>'
+        );
+
+        $("#image-inputs").append(newInput);
+      });
+    });
+  </script>
+{% endblock %}

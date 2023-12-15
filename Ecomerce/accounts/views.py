@@ -4,7 +4,8 @@ from django.urls import reverse ,reverse_lazy
 from django.contrib.auth import login as auth_login,authenticate,logout as auth_logout
 from accounts.form import CustomUserCreationForm
 from accounts.models import CustomUser
-from myadmin.models import BlockedUser 
+from myadmin.models import BlockedUser
+from myadmin.models import Category,Products,ProductImages
 from django.core import signing 
 from django.views.decorators.cache import cache_control
 from django.contrib.auth.decorators import login_required
@@ -138,11 +139,14 @@ def resend_otp(request, user_id):
 
 
 def home(request):
-    print(request.user.is_authenticated)
     if request.user.is_authenticated == False:
         return redirect('signup')
     
-    
-    return render(request,'accounts/ushome.html')
+    categories= Category.objects.all()
+    products= Products.objects.all()
+    images= ProductImages.objects.all()
+    for i in products:
+        print(i.rating)
+    return render(request,'accounts/ushome.html',{'categories': categories,'products':products,'images':images})
 
     

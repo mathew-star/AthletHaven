@@ -5,9 +5,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from accounts.models import CustomUser
-from myadmin.models import BlockedUser
-from .models import Category
-from .forms import CategoryForm
+from myadmin.models import BlockedUser,Products,ProductImages
+from django.shortcuts import render, get_object_or_404, redirect
+from myadmin.forms import CategoryForm
+from django.apps import apps
+Category = apps.get_model('myadmin', 'Category')
 
 # Create your views here.
 
@@ -67,24 +69,24 @@ def user_management_view(request):
         user = CustomUser.objects.get(id=user_id)  # Use your custom user model
 
         if action == 'Block':
-            # Check if the user is not already blocked
+            
             if not BlockedUser.objects.filter(user=user).exists():
                 BlockedUser.objects.create(user=user)
-                user.is_active = False  # Set is_active to False when blocked
+                user.is_active = False  
 
         elif action == 'Unblock':
-            # Check if the user is blocked
+            
             blocked_user = BlockedUser.objects.filter(user=user).first()
             if blocked_user:
                 blocked_user.delete()
-                user.is_active = True  # Set is_active to True when unblocked
+                user.is_active = True  
 
         elif action == 'Edit':
-            # Redirect to the edit user page
+            
             return redirect('edit_user', user_id=user_id)
 
-        user.save()  # Save only if necessary
-        return redirect('user_management_view')  # Redirect after other actions
+        user.save() 
+        return redirect('user_management_view')  
 
     users = CustomUser.objects.all()  # Use your custom user model
     return render(request, 'myadmin/user_management.html', {'users': users})
@@ -120,3 +122,67 @@ def toggle_category_listing(request, category_id):
     category.is_listed = not category.is_listed
     category.save()
     return redirect('category_list')
+
+
+def toggle_product_listing(request, category_id):
+    p = Products.objects.get(id=category_id)
+    p.is_listed = not p.is_listed
+    p.save()
+    return redirect('product_list')
+
+
+def product_list(request):
+    products = Products.objects.all()
+    return render(request, 'myadmin/product_list.html', {'products': products})
+
+def add_product(request):
+    categories = Category.objects.all()
+
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        description = request.POST.get('description')
+        category_id = request.POST.get('category')
+        price = request.POST.get('price')
+        rating = request.POST.get('rating')
+        star = request.POST.get('star')
+
+        if name and description and category_id and price and rating and star:
+            category = Category.objects.get(id=category_id)
+
+            product = Products.objects.create(
+                name=name,
+                description=description,
+                category=category,
+                price=price,
+                rating=rating,
+                star=star
+            )
+
+            for i in range(1, 5):
+                image = request.FILES.get(f'image{i}')
+                if image:
+                    ProductImages.objects.create(product=product, image=image)
+
+            return redirect('product_list')
+
+    return render(request, 'myadmin/add_product.html', {'categories': categories})
+
+def edit_product(request, product_id):
+  categories = Category.objects.all()
+  product = Products.objects.get(id=product_id)
+  if request.method == 'POST':
+      product.name = request.POST['name']
+      product.description = request.POST['description']
+      product.price = request.POST['price']
+      product.rating = request.POST['rating']
+      product.star = request.POST['star']
+      product.category = Category.objects.get(id=request.POST['category'])
+      product.save()
+
+      for i in range(2): # Update 4 images
+          product_image = ProductImages.objects.get(product=product, image=request.FILES[f'image{i+1}'])
+          product_image.image = request.FILES[f'image{i+1}']
+          product_image.save()
+
+      return redirect('product_list')
+  return render(request, 'myadmin/edit_product.html', {'categories': categories})

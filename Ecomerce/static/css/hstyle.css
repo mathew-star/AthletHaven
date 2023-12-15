@@ -191,7 +191,7 @@ html {
   
   .card-title {
       position: absolute;
-      bottom: -15px;
+      bottom: -8px;
       left: 50%;
       transform: translateX(-50%);
       font-family: 'Russo One', sans-serif;

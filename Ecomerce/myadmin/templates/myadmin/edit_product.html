@@ -1,0 +1,47 @@
+{% extends 'myadmin/adminbase.html' %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h1 class="mb-4">Edit Product - {{ product.name }}</h1>
+
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <label for="name">Name:</label><br>
+      <input type="text" id="name" name="name"><br>
+      <label for="description">Description:</label><br>
+      <textarea id="description" name="description"></textarea><br>
+      <label for="category">Category:</label><br>
+ <select id="category" name="category">
+   {% for category in categories %}
+     <option value="{{ category.id }}" {% if category.id == product.category.id %}selected{% endif %}>{{ category.name }}</option>
+   {% endfor %}
+ </select><br>
+      <label for="price">Price:</label><br>
+      <input type="text" id="price" name="price"><br>
+      <label for="rating">Rating:</label><br>
+      <select id="rating" name="rating">
+        <option value="1">4.1</option>
+        <option value="2">4.2</option>
+        <option value="3">4.3</option>
+        <option value="4">4.4</option>
+        <option value="5">5</option>
+      </select><br>
+      <label for="star">Star:</label><br>
+      <select id="star" name="star">
+        <option value="1">1 star</option>
+        <option value="2">2 stars</option>
+        <option value="3">3 stars</option>
+        <option value="4">4 stars</option>
+        <option value="5">5 stars</option>
+      </select><br>
+      {% for i in "1234" %}
+        <label for="image{{ i }}">Image {{ i }}:</label><br>
+        <input type="file" id="image{{ i }}" name="image{{ i }}"><br>
+      {% endfor %}
+      <input type="submit" value="Edit Product">
+     </form>
+     
+
+    <a href="{% url 'product_list' product.id %}" class="btn btn-secondary mt-3">Back to Product list</a>
+  </div>
+{% endblock %}

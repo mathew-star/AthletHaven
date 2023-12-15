@@ -94,23 +94,20 @@
   <!-- Category Section -->
   <div class="container mt-5 ">
     <h2 class="text-center m-3">Categories</h2>
-      <div class="row mt-4">
-          <!-- Category 1 -->
+    <div class="row mt-3">
+        {% for category in categories %}
           <div class="categ col-md-4 mb-4 me-5">
-              <div class="card" style="border-radius: 5%;">
-                  <img src="https://c0.wallpaperflare.com/preview/173/722/570/action-athlete-ball-dark.jpg" class="card-img-top" alt="Category 1">
-                  <div class="card-body text-center">
-                      <div class="overlay"></div>
-                      <h5 class="card-title text-black fw-3 fs-4">FOOTBALL</h5>
-                  </div>
+            <div class="card" style="border-radius: 5%;">
+              <img src="{{ category.image.url }}" class="card-img-top" alt="{{ category.name }}">
+              <div class="card-body text-center">
+                <div class="overlay"></div>
+                <h5 class="card-title text-black fw-3 fs-4">{{ category.name }}</h5>
               </div>
+            </div>
           </div>
-
-          <!-- Category 2 (Add more as needed) -->
-
-        </div>
-
-        </div>
+        {% endfor %}
+      </div>
+    </div>
 
 
 <hr>
@@ -121,22 +118,30 @@
       <h2 class="text-center m-3">Exclusive Products</h2>
       <div class="row mt-4">
           <!-- Product 1 -->
+          {% for product in products %}
           <div class="col-md-4 mb-4">
            
               <div class="product-card">
 
                <button class="wishlist-btn" onclick="toggleWishlist(this)"><i class="far fa-heart"></i></button>
                  <a href="product-detail.html" class="prod-det">
-                  <img src="https://rukminim2.flixcart.com/image/612/612/xif0q/ball/6/8/d/300-storm-football-size-5-5-20-1-1-football-nivia-original-imaggurhz3jukjd3.jpeg?q=70" class="product-img img-fluid" alt="Product 1"></a>
+                    {% for img in product.image.all %}
+                {% if forloop.first %}
+                  <!-- Display only the first image with a responsive class -->
+                  <img src="{{ img.image.url }}" alt="{{ product.name }}" class="product-img img-fluid">
+                {% endif %}
+              {% endfor %}</a>
+                  
                   <div class="product-info">
-                      <div class="rating-box">4.1 <i class="fas fa-star"></i></div>
-                      <h5 class="product-name">Product Name 1</h5>
-                      <p class="product-price">$99.99</p>
+                      <div class="rating-box">4.1<i class="fas fa-star"></i></div>
+                      <h5 class="product-name"> {{product.name}} </h5>
+                      <p class="product-price"> {{product.price}}Rs</p>
                       <button class="add-to-cart-btn">Add to Cart</button>
                   </div>
                 
               </div>
           </div>
+          {% endfor %}
 
           <!-- Product 2 (Add more as needed) -->
           
