@@ -1,47 +1,110 @@
 {% extends 'myadmin/adminbase.html' %}
 
-{% block content %}
-  <div class="container mt-5">
-    <h1 class="mb-4">Edit Product - {{ product.name }}</h1>
+{% block main %}
+<div class="container mt-5">
+  <h1 class="mb-4">Edit Product - {{ product.name }}</h1>
 
-    <form method="POST" enctype="multipart/form-data">
-      {% csrf_token %}
-      <label for="name">Name:</label><br>
-      <input type="text" id="name" name="name"><br>
-      <label for="description">Description:</label><br>
-      <textarea id="description" name="description"></textarea><br>
-      <label for="category">Category:</label><br>
- <select id="category" name="category">
-   {% for category in categories %}
-     <option value="{{ category.id }}" {% if category.id == product.category.id %}selected{% endif %}>{{ category.name }}</option>
-   {% endfor %}
- </select><br>
-      <label for="price">Price:</label><br>
-      <input type="text" id="price" name="price"><br>
-      <label for="rating">Rating:</label><br>
-      <select id="rating" name="rating">
-        <option value="1">4.1</option>
-        <option value="2">4.2</option>
-        <option value="3">4.3</option>
-        <option value="4">4.4</option>
-        <option value="5">5</option>
-      </select><br>
-      <label for="star">Star:</label><br>
-      <select id="star" name="star">
-        <option value="1">1 star</option>
-        <option value="2">2 stars</option>
-        <option value="3">3 stars</option>
-        <option value="4">4 stars</option>
-        <option value="5">5 stars</option>
-      </select><br>
-      {% for i in "1234" %}
-        <label for="image{{ i }}">Image {{ i }}:</label><br>
-        <input type="file" id="image{{ i }}" name="image{{ i }}"><br>
+  <form method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="name" class="form-label">Name:</label>
+      <input type="text" class="form-control" id="name" name="name" value="{{ product.name }}" required>
+    </div>
+    <div class="mb-3">
+      <label for="description" class="form-label">Description:</label>
+      <textarea class="form-control" id="description" name="description" required>{{ product.description }}</textarea>
+    </div>
+    <div class="mb-3">
+      <label for="category" class="form-label">Category:</label>
+      <select class="form-select" id="category" name="category" required>
+        {% for category in categories %}
+          <option value="{{ category.id }}" {% if category.id == product.category.id %}selected{% endif %}>{{ category.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="price" class="form-label">Price:</label>
+      <input type="text" class="form-control" id="price" name="price" value="{{ product.price }}" required>
+    </div>
+    <div class="mb-3">
+      <label for="rating" class="form-label">Rating:</label>
+      <select class="form-select" id="rating" name="rating" required>
+        <option value="1" {% if product.rating == 1 %}selected{% endif %}>4.1</option>
+        <option value="2" {% if product.rating == 2 %}selected{% endif %}>4.2</option>
+        <option value="3" {% if product.rating == 3 %}selected{% endif %}>4.3</option>
+        <option value="4" {% if product.rating == 4 %}selected{% endif %}>4.4</option>
+        <option value="5" {% if product.rating == 5 %}selected{% endif %}>5</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="star" class="form-label">Star:</label>
+      <select class="form-select" id="star" name="star" required>
+        <option value="1" {% if product.star == 1 %}selected{% endif %}>1 star</option>
+        <option value="2" {% if product.star == 2 %}selected{% endif %}>2 stars</option>
+        <option value="3" {% if product.star == 3 %}selected{% endif %}>3 stars</option>
+        <option value="4" {% if product.star == 4 %}selected{% endif %}>4 stars</option>
+        <option value="5" {% if product.star == 5 %}selected{% endif %}>5 stars</option>
+      </select>
+    </div>
+    
+    <div id="image-inputs">
+      {% for img in product.image.all %}
+        <div class="mb-3">
+          <label for="image{{ img.id }}" class="form-label">Image Added:</label>
+          <img src="{{ img.image.url }}" alt="Product Image" class="img-fluid" style="max-height: 80px;">
+          <input type="file" class="form-control" id="image{{ img.id }}" name="image{{ img.id }}" accept="image/*">
+        </div>
       {% endfor %}
-      <input type="submit" value="Edit Product">
-     </form>
-     
 
-    <a href="{% url 'product_list' product.id %}" class="btn btn-secondary mt-3">Back to Product list</a>
-  </div>
+      {% for i in "12" %}
+        <div class="mb-3">
+          <label for="image{{ i }}" class="form-label">Image {{ i }}:</label>
+          <input type="file" class="form-control" id="image{{ i }}" name="image{{ i }}">
+        </div>
+      {% endfor %}
+    </div>
+
+    <button type="button" class="btn btn-success" id="add-image">Add Image</button>
+    <input type="submit" value="Edit Product" class="btn btn-primary">
+  </form>
+
+  <a href="{% url 'product_list' %}" class="btn btn-secondary mt-3">Back to Product list</a>
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function validateForm() {
+    var name = document.getElementById('name').value;
+    var description = document.getElementById('description').value;
+    var category = document.getElementById('category').value;
+    var price = document.getElementById('price').value;
+    var rating = document.getElementById('rating').value;
+    var star = document.getElementById('star').value;
+
+    if (name === "" || description === "" || category === "" || price === "" || rating === "" || star === "") {
+      alert("All fields must be filled out");
+      return false;
+    }
+
+
+    return true; 
+  }
+
+  $(document).ready(function() {
+    $("#add-image").click(function() {
+      var formCount = $("#image-inputs input[type='file']").length + 1;
+      var newInput = $(
+        '<div class="mb-3">' +
+        '<label for="image' + formCount + '" class="form-label">Image ' + formCount + ':</label>' +
+        '<input type="file" class="form-control" id="image' + formCount + '" name="image' + formCount + '">' +
+        '</div>'
+      );
+
+      $("#image-inputs").append(newInput);
+    });
+  });
+</script>
 {% endblock %}

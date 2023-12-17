@@ -144,5 +144,17 @@ let countdownInterval = setInterval(() => {
   }
 }, 1000);
 
+document.querySelector('form').addEventListener('submit', (event) => {
+  // Check if any of the OTP input fields are empty
+  
+    if (countdown === 0) {
+      // Prevent form submission
+      submitBtn.style.display = 'none';
+      event.preventDefault();
+      return;
+    }
+  
+ });
+
 </script>
 {% endblock %}

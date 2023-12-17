@@ -1,0 +1,34 @@
+{% extends 'myadmin/adminbase.html' %}
+
+{% block main %}
+  <div class="container mt-5">
+    <h1 class="mb-4">Edit Category - {{ category.name }}</h1>
+
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="{{ form.name.id_for_label }}" class="form-label">Category Name:</label>
+        {{ form.name }}
+      </div>
+      <div class="mb-3">
+        <label for="{{ form.description.id_for_label }}" class="form-label">Description:</label>
+        {{ form.description }}
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Image:</label>
+        {% if category.image %}
+          <img src="{{ category.image.url }}" alt="{{ category.name }}" class="img-thumbnail mb-2" style="max-width: 200px;">
+        {% endif %}
+        {{ form.image }}
+      </div>
+      <div class="mb-3 form-check">
+        {{ form.is_listed }}
+        <label class="form-check-label" for="{{ form.is_listed.id_for_label }}">Listed</label>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+
+    <a href="{% url 'category_list' %}" class="btn btn-secondary mt-3">Back to Category List</a>
+  </div>
+{% endblock %}

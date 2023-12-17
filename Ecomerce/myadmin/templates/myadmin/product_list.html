@@ -1,43 +1,42 @@
-
 {% extends 'myadmin/adminbase.html' %}
 
 {% block main %}
   <div class="container mt-5">
     <h1>Product List</h1>
-    <table class="table">
-      <thead>
+    <table class="table table-bordered table-hover">
+      <thead class="thead-dark">
         <tr>
           <th>Name</th>
           <th>Description</th>
           <th>Price</th>
-          <th>Rating</th>
-          <th>Star</th>
           <th>Category</th>
           <th>Image</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         {% for product in products %}
           <tr>
             <td>{{ product.name }}</td>
-            <td style="word-wrap: break-word;">{{ product.description }}</td>
+            <td style="max-width: 300px;">{{ product.description }}</td>
             <td>{{ product.price }}Rs</td>
-            <td>{{ product.rating }}</td>
-            <td>{{ product.star }}</td>
             <td>{{ product.category.name }}</td>
             <td>
               {% for img in product.image.all %}
                 {% if forloop.first %}
-                  <!-- Display only the first image with a responsive class -->
-                  <img src="{{ img.image.url }}" alt="{{ product.name }}" class="img-fluid" style="max-height: 50px;">
+                  <img src="{{ img.image.url }}" alt="{{ product.name }}" class="img-thumbnail" style="max-height: 50px;">
                 {% endif %}
               {% endfor %}
+            </td>
+            <td >
+              <a href="{% url 'edit_product' product_id=product.id %}" class="btn btn-primary btn-sm mb-2">Edit</a>
+              <a href="{% url 'delete_product' product_id=product.id %}" class="btn btn-danger btn-sm mt-2">Delete</a>
             </td>
           </tr>
         {% endfor %}
       </tbody>
     </table>
 
-    <a href="{% url 'add_product' %}" class="btn btn-primary">Add Product</a>
+    <a href="{% url 'add_product' %}" class="btn btn-success">Add Product</a>
   </div>
 {% endblock %}

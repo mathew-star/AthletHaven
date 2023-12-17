@@ -63,6 +63,10 @@ def adminhome(request):
     
 
 def user_management_view(request):
+    if request.user.is_superuser == False:
+        return redirect( 'home')
+    if not request.user.is_superuser:
+        return render(request, 'users/userhome.html')
     if request.method == 'POST':
         action = request.POST.get('action')
         user_id = request.POST.get('user_id')
@@ -93,21 +97,27 @@ def user_management_view(request):
 
 
 def edit_user_view(request, user_id):
- user = CustomUser.objects.get(id=user_id)
- if request.method == 'POST':
-     user.name = request.POST.get('name')
-     user.email = request.POST.get('email')
-     user.phone_number = request.POST.get('phone_number')
-     user.save()
-     return redirect('user_management_view')
- return render(request, 'myadmin/edituser.html', {'user': user})
+        user = CustomUser.objects.get(id=user_id)
+        if request.user.is_authenticated and request.user.is_superuser:
+                return render(request, 'myadmin/adminhome.html')
+        if request.method == 'POST':
+            user.name = request.POST.get('name')
+            user.email = request.POST.get('email')
+            user.phone_number = request.POST.get('phone_number')
+            user.save()
+            return redirect('user_management_view')
+        return render(request, 'myadmin/edituser.html', {'user': user})
 
 
 def category_list(request):
+    if request.user.is_superuser == False:
+        return redirect( 'home')
     categories = Category.objects.all()
     return render(request, 'myadmin/category_list.html', {'categories': categories})
 
 def add_category(request):
+    if not request.user.is_superuser:
+        return render(request, 'users/userhome.html')
     if request.method == 'POST':
         form = CategoryForm(request.POST, request.FILES)
         if form.is_valid():
@@ -116,6 +126,28 @@ def add_category(request):
     else:
         form = CategoryForm()
     return render(request, 'myadmin/add_category.html', {'form': form})
+
+
+
+def edit_category(request, category_id):
+    category = get_object_or_404(Category, id=category_id)
+    
+    if request.method == 'POST':
+        form = CategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            form.save()
+            return redirect('category_list')
+    else:
+        form = CategoryForm(instance=category)
+
+    return render(request, 'myadmin/edit_category.html', {'form': form, 'category': category})
+
+def delete_category(request, category_id):
+    category = get_object_or_404(Category, id=category_id)
+    category.delete()
+    return redirect('category_list')
+
+
 
 def toggle_category_listing(request, category_id):
     category = Category.objects.get(id=category_id)
@@ -132,6 +164,8 @@ def toggle_product_listing(request, category_id):
 
 
 def product_list(request):
+    if request.user.is_superuser == False:
+        return redirect( 'home')
     products = Products.objects.all()
     return render(request, 'myadmin/product_list.html', {'products': products})
 
@@ -167,22 +201,29 @@ def add_product(request):
 
     return render(request, 'myadmin/add_product.html', {'categories': categories})
 
+
 def edit_product(request, product_id):
-  categories = Category.objects.all()
-  product = Products.objects.get(id=product_id)
-  if request.method == 'POST':
-      product.name = request.POST['name']
-      product.description = request.POST['description']
-      product.price = request.POST['price']
-      product.rating = request.POST['rating']
-      product.star = request.POST['star']
-      product.category = Category.objects.get(id=request.POST['category'])
-      product.save()
+    categories = Category.objects.all()
+    product = Products.objects.get(id=product_id)
 
-      for i in range(2): # Update 4 images
-          product_image = ProductImages.objects.get(product=product, image=request.FILES[f'image{i+1}'])
-          product_image.image = request.FILES[f'image{i+1}']
-          product_image.save()
+    if request.method == 'POST':
+        print("in edit")
+        product.name = request.POST['name']
+        product.description = request.POST['description']
+        product.price = request.POST['price']
+        product.category = Category.objects.get(id=request.POST['category'])
+        product.save()
 
-      return redirect('product_list')
-  return render(request, 'myadmin/edit_product.html', {'categories': categories})
+        for i in range(1, 5):
+            image = request.FILES.get(f'image{i}')
+            if image:
+                ProductImages.objects.create(product=product, image=image)
+
+        return redirect('product_list')
+
+    return render(request, 'myadmin/edit_product.html', {'categories': categories, 'product': product})
+
+def delete_product(request, product_id):
+    product = get_object_or_404(Products, id=product_id)
+    product.delete()
+    return redirect('product_list')

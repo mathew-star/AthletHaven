@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from accounts import form
 from django.urls import reverse ,reverse_lazy
 from django.contrib.auth import login as auth_login,authenticate,logout as auth_logout
@@ -18,25 +20,25 @@ import pyotp
 
 
 def send_otp_email(user):
-    secret_key = pyotp.random_base32()
-    totp = pyotp.TOTP(secret_key, digits=6, interval=60)
-    otp = totp.now()
-    user.otp_secret_key = secret_key
-    user.otp = otp
-    user.save()
+   secret_key = pyotp.random_base32()
+   totp = pyotp.TOTP(secret_key, digits=6, interval=120)
+   otp = totp.now()
+   user.otp_secret_key = secret_key
+   user.otp = otp
+   user.save()
 
-    subject = 'OTP Verification'
-    message = f'Your OTP for email verification is: {otp}'
-    from_email = 'mjunni99@gmail.com'
-    to_email = user.email
+   subject = 'OTP Verification'
+   message = f'Your OTP for email verification is: {otp}'
+   from_email = 'mjunni99@gmail.com'
+   to_email = user.email
 
-    send_mail(subject, message, from_email, [to_email])
+   send_mail(subject, message, from_email, [to_email])
+
 @cache_control(no_cache=True, must_revalidate=True, no_store=False)
 def signup(request):
     print(request.user.is_authenticated)
     if request.user.is_authenticated:
         return redirect('home')
-    
     
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
@@ -61,7 +63,6 @@ def signup(request):
 @cache_control(no_cache=True, must_revalidate=True, no_store=False)
 def login(request):
     user = None  # Initialize user variable
-
     if request.user.is_authenticated:
         return redirect('home')
 
@@ -75,11 +76,13 @@ def login(request):
             messages.warning(request, f"User with {email} does not exist")
 
         if user is not None:
-            # Check if the user is blocked
             blocked_user = BlockedUser.objects.filter(user=user).first()
-            
+            if user.is_active == False:
+                messages.error(request, "Account has been deactivated.")
+
             if blocked_user:
                 messages.warning(request, "User is blocked by admin.")
+
             else:
                 authenticated_user = authenticate(request, email=email, password=password)
                 
@@ -104,16 +107,16 @@ def logout(request):
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=False)
 def verify_otp(request, user_id):
-    if request.user.is_authenticated and request.user.is_active :
-        return redirect('home')
     user = CustomUser.objects.get(id=user_id)
 
     if request.method == 'POST':
-        entered_otp = ''.join(request.POST.getlist('otp'))
-        totp = pyotp.TOTP(user.otp_secret_key, digits=6, interval=60)
-        print("Entered OTP:", entered_otp)
-        print("Expected OTP:", totp.now())
-        if totp.verify(entered_otp):
+        entered_otp = int(''.join(request.POST.getlist('otp')).strip())
+        if entered_otp == '':
+            messages.error(request, 'Please enter all OTP digits.')
+            return render(request, 'accounts/otp.html', {'user': user})
+        print(user.otp)
+        print(entered_otp)
+        if entered_otp == user.otp:
             user.is_active = True
             user.save()
             auth_login(request, user)
@@ -139,14 +142,12 @@ def resend_otp(request, user_id):
 
 
 def home(request):
-    if request.user.is_authenticated == False:
+    if request.user.is_authenticated == False and request.user.is_active == False:
         return redirect('signup')
     
     categories= Category.objects.all()
     products= Products.objects.all()
     images= ProductImages.objects.all()
-    for i in products:
-        print(i.rating)
     return render(request,'users/userhome.html',{'categories': categories,'products':products,'images':images})
 
     
