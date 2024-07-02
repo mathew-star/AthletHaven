@@ -93,7 +93,7 @@ WSGI_APPLICATION = 'Ecomerce.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL', 'postgresql://athelet_haven_user:WlzY1dGGUpndBWA590KYADr6ZResm6xn@dpg-cq20gmrv2p9s73da5egg-a/athelet_haven')
+        default=os.environ.get('DATABASE_URL', 'postgresql://athelet_haven_user:WlzY1dGGUpndBWA590KYADr6ZResm6xn@dpg-cq20gmrv2p9s73da5egg-a.oregon-postgres.render.com/athelet_haven')
     )
 }
 
