@@ -86,15 +86,16 @@ WSGI_APPLICATION = 'Ecomerce.wsgi.application'
 
 
 DATABASES = {
-'default': {
-'ENGINE': 'django.db.backends.mysql',
-'NAME': 'EcomDB',
-'USER': 'pyuser',
-'PASSWORD': 'password',
-'HOST': '127.0.0.1',
-'PORT' : '',
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'HOST': 'localhost',  
+        'NAME': 'EcomDB',
+        'USER': 'pyuser',
+        'PASSWORD': 'password',
+        'PORT': '3306',
+    }
 }
-}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
