@@ -30,6 +30,7 @@ JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-0_=3b7r4_+l_kf_a(i7mljl59s%mcj3w*&^!f@qk7^ug=1k*=6')
 
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+# DEBUG= 'True'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
     'accounts',
     'myadmin',
     'users',
+    'storages',
     
 ]
 
@@ -88,7 +90,17 @@ WSGI_APPLICATION = 'Ecomerce.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
 
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql', 
+#         'NAME': 'EcomDB',
+#         'USER': 'pyuser',
+#         'PASSWORD': 'password',
+#         'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+#         'PORT': '3306',
+#     }
+# }
 
 
 DATABASES = {
@@ -129,11 +141,22 @@ USE_I18N = True
 USE_TZ = True
 
 
+
+
+# AWS S3 settings
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID', 'AKIA2UC3ELEDJJ72VKFC')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY', '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')
+AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME', 'athletehaven')
+AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME', 'ap-southeast-2')  # Correct format for the region
+AWS_S3_SIGNATURE_VERSION = 's3v4'
+AWS_DEFAULT_ACL = None
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+AWS_QUERYSTRING_AUTH = False  # Set to False to make media files public
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
-
-
-
 
 STATIC_URL = '/static/'
 
@@ -145,12 +168,17 @@ if not DEBUG:
     # and renames the files with unique names for each version to support long-term caching
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-STATICFILES_DIRS=[
-    os.path.join(BASE_DIR,"static")
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static")
 ]
 
-MEDIA_URL= '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR ,'media')
+# Media files settings
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com/'
+
+
+# MEDIA_URL= '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR ,'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
