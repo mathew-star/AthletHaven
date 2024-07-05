@@ -40,6 +40,10 @@ from django.db.models import Sum
 from django.apps import apps
 Category = apps.get_model('myadmin', 'Category')
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 # Create your views here.
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=False)
@@ -144,36 +148,27 @@ def category_list(request):
 def add_category(request):
     if not request.user.is_superuser:
         return render(request, 'users/userhome.html')
+    
     if request.method == 'POST':
         form = CategoryForm(request.POST, request.FILES)
         if form.is_valid():
-            category=form.save()
-
-            # new_offer_percentage = request.POST.get('new_offer_percentage')
-            # new_offer_start_date = request.POST.get('new_offer_start_date')
-            # new_offer_end_date = request.POST.get('new_offer_end_date')
-
-            # if new_offer_percentage and new_offer_start_date and new_offer_end_date:
-            #     CategoryOffer.objects.create(
-            #         category=category,
-            #         discount_percentage=new_offer_percentage,
-            #         start_date=new_offer_start_date,
-            #         end_date=new_offer_end_date
-            #     )
             try:
-                category_offer=CategoryOffer.objects.get(category=category)
-            except:
-                category_offer=CategoryOffer.objects.create(category=category,discount_percentage=0)
+                category = form.save()
 
+                try:
+                    category_offer = CategoryOffer.objects.get(category=category)
+                except CategoryOffer.DoesNotExist:
+                    category_offer = CategoryOffer.objects.create(category=category, discount_percentage=0)
 
-
-            return redirect('category_list')
-
+                return redirect('category_list')
+            except Exception as e:
+                logger.error(f"Error saving category: {e}")
+                # Optionally re-raise the exception to see the full stack trace
+                raise
 
     else:
         form = CategoryForm()
     return render(request, 'myadmin/add_category.html', {'form': form})
-
 
 
 
